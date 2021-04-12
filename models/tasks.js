@@ -31,7 +31,7 @@ class Tasks {
     }
 
     deleteTask(id = '') {
-        if(this._tasksList[id]){
+        if (this._tasksList[id]) {
             delete this._tasksList[id]
         }
     }
@@ -63,6 +63,21 @@ class Tasks {
                     console.log(`${cont.toString().red} ${description} :: ${state}`)
                 }
 
+            }
+        })
+    }
+
+    toggleStatusTasks(ids = []) {
+        ids.forEach(id => {
+            const task = this._tasksList[id]
+            if (!task.completeDate) {
+                task.completeDate = new Date().toISOString()
+            }
+        })
+
+        this.tasksListArray.forEach(task => {
+            if (!ids.includes(task.id)) {
+                this._tasksList[task.id].completeDate = null
             }
         })
     }
