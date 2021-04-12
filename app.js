@@ -1,12 +1,14 @@
 require('colors')
 
-const { 
-   inquirerMenu, 
-   pause, 
-   readInput 
+const {
+   inquirerMenu,
+   pause,
+   readInput,
+   deleteTasksList,
+   confirmQuestion
 } = require('./helpers/inquirer')
 const Tasks = require('./models/tasks')
-const {saveDB, readDB} = require('./helpers/fileManager')
+const { saveDB, readDB } = require('./helpers/fileManager')
 
 const main = async () => {
    let opt = ''
@@ -30,10 +32,26 @@ const main = async () => {
          case '2':
             tasks.completeTasksList()
             break;
+         case '3': //List Complete Tasks
+            tasks.completeOrPendingTasksList(true)
+            break;
+         case '4': //List Pending Tasks
+            tasks.completeOrPendingTasksList(false)
+            break;
+         case '6':
+            const id = await deleteTasksList(tasks.tasksListArray)
+            if (id !== '0') {
+               const ok = await confirmQuestion('Está Seguro?')
+               if (ok) {
+                  tasks.deleteTask(id)
+                  console.log('Tarea Borrada')
+               }
+            }
+            break;
       }
 
       await pause();
-      saveDB( tasks.tasksListArray )
+      saveDB(tasks.tasksListArray)
 
 
    } while (opt != 0)

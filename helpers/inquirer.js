@@ -48,31 +48,31 @@ const inquirerMenu = async () => {
 
     const { opcion } = await inquirer.prompt(questions)
 
-    return opcion 
+    return opcion
 }
 
-const pause = async() => {
-    
+const pause = async () => {
+
     const question = [
         {
             type: 'input',
             name: 'enter',
-            message: `Presione ${ 'enter'.green } para continuar`
+            message: `Presione ${'enter'.green} para continuar`
         }
     ]
 
     await inquirer.prompt(question)
 }
 
-const readInput = async ( message ) => {
+const readInput = async (message) => {
 
     const question = [
         {
             name: 'description',
             type: 'input',
             message,
-            validate( value ){
-                if( value.length === 0){
+            validate(value) {
+                if (value.length === 0) {
                     return 'Ingrese un valor';
                 }
                 return true
@@ -80,13 +80,56 @@ const readInput = async ( message ) => {
         }
     ]
 
-    const {description} = await inquirer.prompt(question)
+    const { description } = await inquirer.prompt(question)
 
     return description
+}
+
+const deleteTasksList = async (tasks = []) => {
+    const choices = tasks.map((task, index) => {
+        index = `${index + 1}`.green
+
+        return {
+            value: task.id,
+            name: `${index} ${task.description}`
+        }
+    })
+
+    choices.unshift({
+        value: '0',
+        name: '0.'.green + ' Cancelar'
+    })
+
+    const question = [
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Borrar',
+            choices
+        }
+    ]
+
+    const { id } = await inquirer.prompt(question)
+    return id
+}
+
+const confirmQuestion = async (message) => {
+    const question = [
+        {
+            type: 'confirm',
+            name: 'ok',
+            message
+        }
+    ]
+
+    const { ok } = await inquirer.prompt(question)
+    return ok
 }
 
 module.exports = {
     inquirerMenu,
     pause,
-    readInput
+    readInput,
+    deleteTasksList,
+    confirmQuestion
 }
