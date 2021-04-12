@@ -6,11 +6,18 @@ const {
    readInput 
 } = require('./helpers/inquirer')
 const Tasks = require('./models/tasks')
-const {saveDB} = require('./helpers/saveFile')
+const {saveDB, readDB} = require('./helpers/fileManager')
 
 const main = async () => {
    let opt = ''
    const tasks = new Tasks()
+
+   const tasksDB = readDB()
+
+   if (tasksDB) {
+      tasks.loadTasksFromArray(tasksDB)
+   }
+
 
    do {
       opt = await inquirerMenu()
@@ -21,14 +28,13 @@ const main = async () => {
             tasks.createTask(description)
             break;
          case '2':
-            console.log(tasks.tasksListArray)
+            tasks.completeTasksList()
             break;
       }
 
-
+      await pause();
       saveDB( tasks.tasksListArray )
 
-      await pause();
 
    } while (opt != 0)
 

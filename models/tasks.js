@@ -12,9 +12,15 @@ class Tasks {
         })
         return tasksListArray
     }
-    
+
     constructor() {
         this._tasksList = {}
+    }
+
+    loadTasksFromArray( tasks = []){
+        tasks.forEach( task => {
+            this._tasksList[task.id] = task
+        })
     }
 
     createTask( description = ''){
@@ -22,6 +28,16 @@ class Tasks {
         const task = new Task(description)
 
         this._tasksList[task.id] = task
+    }
+
+    completeTasksList() {
+        this.tasksListArray.forEach( (task, index) => {
+            index = `${index + 1}`.green
+            const {description, completeDate} = task
+            const state = completeDate ? 'Completada'.green : 'Pendiente'.red 
+
+            console.log(`${index} ${description} :: ${state}`)
+        })
     }
 }
 
